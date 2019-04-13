@@ -23,15 +23,6 @@ import 'antd/dist/antd.css';
 const spaceXApi = process.env.REACT_APP_SPACE_X_API;
 const apolloCache = new InMemoryCache();
 
-/**
- * Conclusion to apollo client direct cache, very BUGGY!
- * BUG FOUND!: readQuery can only be access when both query
- * and variables are the same as the cache data.
- * Follow up link:
- * https://github.com/apollographql/apollo-client/issues/2051#issuecomment-341696989
- * Solution: Use apollo client state state instead =)
- */
-
 const clientStateLink = withClientState({
   resolvers,
   defaults,
