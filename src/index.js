@@ -31,6 +31,11 @@ const clientStateLink = withClientState({
 
 const httpLink = new HttpLink({
   uri: spaceXApi,
+  headers: {
+    authorization: localStorage.getItem('token'),
+    'client-name': 'Space X Explorer [web]',
+    'client-version': '1.0.0',
+  },
 });
 
 const combineLinks = ApolloLink.from([clientStateLink, httpLink]);

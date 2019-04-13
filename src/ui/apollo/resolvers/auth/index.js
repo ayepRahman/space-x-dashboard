@@ -7,7 +7,6 @@ export const createTokens = async (user, SECRET, SECRET_2) => {
   // verify: need secret | user me for authentication
   // decode: no secret | user me on the client side
 
-  // TODO: add teamId here to
   const createToken = jwt.sign(
     {
       user: _.pick(user, ['id', 'email']),
@@ -31,47 +30,40 @@ export const createTokens = async (user, SECRET, SECRET_2) => {
   return [createToken, createRefreshToken];
 };
 
-export const refreshTokens = async (token, refreshToken, models, SECRET, SECRET_2) => {
-  let userId = 0;
+// TODO: might consider using this for refreshing expired token
+// export const refreshTokens = async (token, refreshToken, models, SECRET, SECRET_2) => {
+//   let userId = '';
 
-  try {
-    const {
-      user: { id },
-    } = jwt.decode(refreshToken);
+//   try {
+//     const {
+//       user: { id },
+//     } = jwt.decode(refreshToken);
 
-    userId = id;
-  } catch (error) {
-    console.log('refreshTokens', error);
-    return {};
-  }
+//     userId = id;
 
-  if (!userId) {
-    return {};
-  }
+//     if (!userId) {
+//       return {};
+//     }
+//     const user = await models.User.findById(userId);
 
-  const user = await models.User.findById(userId);
+//     if (!user) {
+//       return {};
+//     }
+//     const refreshTokenSecret = user.password + SECRET_2;
 
-  if (!user) {
-    return {};
-  }
+//     jwt.verify(refreshToken, refreshTokenSecret);
 
-  const refreshTokenSecret = user.password + SECRET_2;
+//     const [newToken, newRefreshToken] = await createTokens(user, SECRET, refreshTokenSecret);
 
-  try {
-    jwt.verify(refreshToken, refreshTokenSecret);
-  } catch (error) {
-    console.log('refreshTokens', error);
-    return {};
-  }
-
-  const [newToken, newRefreshToken] = await createTokens(user, SECRET, refreshTokenSecret);
-
-  return {
-    token: newToken,
-    refreshToken: newRefreshToken,
-    user,
-  };
-};
+//     return {
+//       token: newToken,
+//       refreshToken: newRefreshToken,
+//       user,
+//     };
+//   } catch (error) {
+//     return {};
+//   }
+// };
 
 export const tryLogin = async (email, password, { cache }, SECRET, SECRET_2) => {
   let user;
@@ -85,6 +77,8 @@ export const tryLogin = async (email, password, { cache }, SECRET, SECRET_2) => 
     if (!user) {
       return {
         ok: false,
+        token: '',
+        refreshToken: '',
         errors: [
           {
             path: 'email',
@@ -100,6 +94,8 @@ export const tryLogin = async (email, password, { cache }, SECRET, SECRET_2) => 
     if (!valid) {
       return {
         ok: false,
+        token: '',
+        refreshToken: '',
         errors: [
           {
             path: 'password',
@@ -121,6 +117,8 @@ export const tryLogin = async (email, password, { cache }, SECRET, SECRET_2) => 
   } catch (error) {
     return {
       ok: false,
+      token: '',
+      refreshToken: '',
       errors: [error],
     };
   }

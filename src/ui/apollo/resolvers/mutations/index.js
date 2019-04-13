@@ -26,10 +26,10 @@ export default {
       if (email) {
         const userEmailExist = users.filter(user => user.email === email).length;
 
-        debugger;
         if (userEmailExist) {
           return {
             ok: false,
+            user: {},
             errors: [{ message: 'An email address has already been taken.', path: 'email' }],
           };
         }
@@ -52,10 +52,12 @@ export default {
       return {
         ok: true,
         user,
+        errors: [],
       };
     } catch (errors) {
       return {
         ok: false,
+        user: {},
         errors,
       };
     }

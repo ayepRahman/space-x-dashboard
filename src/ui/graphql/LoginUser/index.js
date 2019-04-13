@@ -3,14 +3,14 @@ import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 import { Form as FormAntd, Icon, Input, Button, message } from 'antd';
 import { Form, Field } from 'react-final-form';
-import { SIGN_UP_USER } from './gql';
+import { LOGIN_USER } from './gql';
 import { fieldNames, constraints } from './model';
 import routeTemplates from 'ui/routes/templates';
 import validator from 'utils/validator';
 
 const validate = validator(constraints);
 
-const SignUpUser = ({ history, client, ...others }) => {
+const LoginUser = ({ history, client, ...others }) => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async values => {
@@ -19,24 +19,29 @@ const SignUpUser = ({ history, client, ...others }) => {
 
     try {
       const { data } = await client.mutate({
-        mutation: SIGN_UP_USER,
+        mutation: LOGIN_USER,
         variables: {
           email,
           password,
         },
       });
 
-      const { register } = data;
+      const { login } = data;
 
-      if (register && !register.ok && register.errors) {
-        message.error(register.errors[0].message);
+      debugger;
+
+      if (login && !login.ok && login.errors) {
+        message.error(login.errors[0].message);
         setLoading(false);
       } else {
         // this create a feeling of actually calling an api! =)
         setTimeout(() => {
-          message.success('Sign up successfully!');
-          history.push(routeTemplates.auth.login);
+          localStorage.setItem('token', login.token);
+          localStorage.setItem('refreshToken', login.refreshToken);
+          message.success('Login successfully!');
+          history.push(routeTemplates.dashboard.root);
           setLoading(false);
+          debugger;
         }, 2000);
       }
     } catch (error) {
@@ -91,7 +96,7 @@ const SignUpUser = ({ history, client, ...others }) => {
             type="primary"
             htmlType="submit"
           >
-            Sign up
+            Login
           </Button>
         </FormAntd>
       )}
@@ -99,4 +104,4 @@ const SignUpUser = ({ history, client, ...others }) => {
   );
 };
 
-export default withRouter(withApollo(SignUpUser));
+export default withRouter(withApollo(LoginUser));

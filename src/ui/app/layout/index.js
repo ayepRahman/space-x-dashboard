@@ -1,31 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-
 import { Layout, Button } from 'antd';
-import { Row, Col } from 'antd';
 import routeTemplates from 'ui/routes/templates';
 
-const { Header, Sider, Content, Footer } = Layout;
+const { Header } = Layout;
 
 const AppLayout = ({ history, children, ...others }) => {
-  const logOutButton = () => {
-    // clear localStorage Token
+  const [hasUser, setHasUser] = useState(false);
+  const token = localStorage.getItem('token');
 
-    return <Button onClick={() => history.push(routeTemplates.auth.login)}>Logout</Button>;
+  useEffect(() => {
+    if (token) {
+      setHasUser(true);
+    }
+  }, [token]);
+
+  const handleLogOut = () => {
+    localStorage.clear();
+    setHasUser(false);
   };
 
   return (
     <Layout className="layout">
       <Header>
         <div className="d-flex">
-          <h2 className="text-white py-2">Space X Api</h2>
+          <h2 className="text-white py-2">Space X Explorer</h2>
           <div className="ml-auto d-flex">
-            <div className="pr-3">
-              <Button onClick={() => history.push(routeTemplates.auth.login)}>Login</Button>
-            </div>
-            <div>
-              <Button onClick={() => history.push(routeTemplates.auth.signup)}>Signup</Button>
-            </div>
+            {hasUser ? (
+              <div className="">
+                <Button onClick={() => handleLogOut()}>Logout</Button>
+              </div>
+            ) : (
+              <Fragment>
+                <div className="pr-3">
+                  <Button onClick={() => history.push(routeTemplates.auth.login)}>Login</Button>
+                </div>
+                <div>
+                  <Button onClick={() => history.push(routeTemplates.auth.signup)}>Signup</Button>
+                </div>
+              </Fragment>
+            )}
           </div>
         </div>
       </Header>
