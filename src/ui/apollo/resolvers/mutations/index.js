@@ -1,21 +1,28 @@
 // NOTE: best practice for resolver is to pass a gql tag with all the params
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { tryLogin } from 'ui/apollo/resolvers/auth';
 import { formatErrors } from 'ui/apollo/resolvers/auth/formatErrors';
 
-const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
 const SECRET = process.env.REACT_APP_SECRET;
 const SECRET_2 = process.env.REACT_APP_SECRET_2;
 
+const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
+const salt = bcrypt.genSaltSync(SALT_ROUNDS);
+
 export default {
-  register: async (root, args, { models }) => {
+  register: async (root, args, context) => {
     let user = args;
 
     console.log(user);
 
     try {
-      user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
-      user = await new models.User(user).save();
+      user.password = await bcrypt.hashSync(user.password, salt);
+
+      //TODO: add user to local storage
+
+      user = '';
+
+      // user = await new models.User(user).save();
       user._id = user._id.toString();
 
       console.log('register successfully', user);
@@ -29,7 +36,7 @@ export default {
 
       return {
         ok: false,
-        errors: formatErrors(errors, models.User),
+        errors,
       };
     }
   },
