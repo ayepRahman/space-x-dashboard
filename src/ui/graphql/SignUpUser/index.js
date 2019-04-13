@@ -16,7 +16,7 @@ const SignUpUser = ({ history, client, ...others }) => {
   const onSubmit = async values => {
     const { email, password } = values;
     setLoading(true);
-    debugger;
+
     try {
       const { data } = await client.mutate({
         mutation: SIGN_UP_USER,
@@ -32,16 +32,16 @@ const SignUpUser = ({ history, client, ...others }) => {
         message.error(register.errors[0].message);
         setLoading(false);
       } else {
-        message.success('Sign up successfully!');
-        history.push(routeTemplates.auth.login);
-        setLoading(false);
+        // this create a feeling of acutally calling an api! =)
+        setTimeout(() => {
+          message.success('Sign up successfully!');
+          history.push(routeTemplates.auth.login);
+          setLoading(false);
+        }, 3000);
       }
-
-      debugger;
     } catch (error) {
       message.error(error.message);
       setLoading(false);
-      debugger;
     }
   };
 
