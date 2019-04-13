@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 import bcrypt from 'bcryptjs';
+import { GET_ALL_USERS_STATE } from 'ui/apollo/resolvers/gql/user';
 
 export const createTokens = async (user, SECRET, SECRET_2) => {
   // verify: need secret | user me for authentication
@@ -9,7 +10,7 @@ export const createTokens = async (user, SECRET, SECRET_2) => {
   // TODO: add teamId here to
   const createToken = jwt.sign(
     {
-      user: _.pick(user, ['_id', 'username']),
+      user: _.pick(user, ['id', 'email']),
     },
     SECRET,
     {
@@ -19,7 +20,7 @@ export const createTokens = async (user, SECRET, SECRET_2) => {
 
   const createRefreshToken = jwt.sign(
     {
-      user: _.pick(user, ['_id', 'username']),
+      user: _.pick(user, ['id', 'email']),
     },
     SECRET_2,
     {
@@ -35,10 +36,10 @@ export const refreshTokens = async (token, refreshToken, models, SECRET, SECRET_
 
   try {
     const {
-      user: { _id },
+      user: { id },
     } = jwt.decode(refreshToken);
 
-    userId = _id;
+    userId = id;
   } catch (error) {
     console.log('refreshTokens', error);
     return {};
@@ -72,48 +73,55 @@ export const refreshTokens = async (token, refreshToken, models, SECRET, SECRET_
   };
 };
 
-export const tryLogin = async (email, password, SECRET, SECRET_2) => {
-  // retrieve user from localStorage;
-
+export const tryLogin = async (email, password, { cache }, SECRET, SECRET_2) => {
   let user;
 
-  console.log('TRY LOGIN USER', user);
-  user = user[0];
+  try {
+    const { users } = cache.readQuery({
+      query: GET_ALL_USERS_STATE,
+    });
+    user = users.find(user => user.email === email);
 
-  if (!user) {
+    if (!user) {
+      return {
+        ok: false,
+        errors: [
+          {
+            path: 'email',
+            message: 'Wrong email',
+          },
+        ],
+      };
+    }
+
+    // comparing CLIENT HASH password with local state password which is a HASH/SALT password, return a bool
+    const valid = await bcrypt.compare(password, user.password);
+
+    if (!valid) {
+      return {
+        ok: false,
+        errors: [
+          {
+            path: 'password',
+            message: 'Wrong password',
+          },
+        ],
+      };
+    }
+
+    const refreshTokenSecret = user.password + SECRET_2;
+
+    const [token, refreshToken] = await createTokens(user, SECRET, refreshTokenSecret);
+
+    return {
+      ok: true,
+      token,
+      refreshToken,
+    };
+  } catch (error) {
     return {
       ok: false,
-      errors: [
-        {
-          path: 'email',
-          message: 'Wrong email',
-        },
-      ],
+      errors: [error],
     };
   }
-
-  // comparing CLIENT HASH password with local state password which is a HASH/SALT password, return a bool
-  const valid = await bcrypt.compare(password, user.password);
-
-  if (!valid) {
-    return {
-      ok: false,
-      errors: [
-        {
-          path: 'password',
-          message: 'Wrong password',
-        },
-      ],
-    };
-  }
-
-  const refreshTokenSecret = user.password + SECRET_2;
-
-  const [token, refreshToken] = await createTokens(user, SECRET, refreshTokenSecret);
-
-  return {
-    ok: true,
-    token,
-    refreshToken,
-  };
 };

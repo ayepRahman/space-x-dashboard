@@ -18,7 +18,7 @@ import App from 'ui/app';
 import * as serviceWorker from './serviceWorker';
 
 import 'styles/index.scss';
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 
 const spaceXApi = process.env.REACT_APP_SPACE_X_API;
 const apolloCache = new InMemoryCache();

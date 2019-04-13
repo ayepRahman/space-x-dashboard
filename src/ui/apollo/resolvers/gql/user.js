@@ -6,7 +6,7 @@ const GET_ALL_USERS_STATE = gql`
       id
       email
       password
-      token
+      __typename
     }
   }
 `;

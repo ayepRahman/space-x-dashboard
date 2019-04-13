@@ -5,6 +5,7 @@ export const SIGN_UP_USER = gql`
     register(email: $email, password: $password) @client {
       ok
       user
+      errors
     }
   }
 `;

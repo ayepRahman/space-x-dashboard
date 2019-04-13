@@ -6351,10 +6351,10 @@ jws@^3.2.2:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
 
-keygenerator@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/keygenerator/-/keygenerator-1.0.4.tgz#4ac884827cbf3b153636bb5425efe5831f9fe8ad"
-  integrity sha1-SsiEgny/OxU2NrtUJe/lgx+f6K0=
+keygen@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/keygen/-/keygen-0.3.1.tgz#032e6ae1e7d0f88e716c4bdf0eae0d0216e372c1"
+  integrity sha1-Ay5q4efQ+I5xbEvfDq4NAhbjcsE=
 
 killable@^1.0.0:
   version "1.0.1"
@@ -9253,11 +9253,6 @@ react-error-overlay@^5.1.4:
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.4.tgz#88dfb88857c18ceb3b9f95076f850d7121776991"
   integrity sha512-fp+U98OMZcnduQ+NSEiQa4s/XMsbp+5KlydmkbESOw4P69iWZ68ZMFM5a2BuE0FgqPBKApJyRuYHR95jM8lAmg==
-
-react-final-form-antd@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/react-final-form-antd/-/react-final-form-antd-0.0.3.tgz#de93fbfab9b1bdd10c583433d8a56dbb37bf1191"
-  integrity sha1-3pP7+rmxvdEMWDQz2KVtuze/EZE=
 
 react-final-form@^4.1.0:
   version "4.1.0"
