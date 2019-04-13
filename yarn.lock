@@ -6351,6 +6351,11 @@ jws@^3.2.2:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
 
+keygenerator@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/keygenerator/-/keygenerator-1.0.4.tgz#4ac884827cbf3b153636bb5425efe5831f9fe8ad"
+  integrity sha1-SsiEgny/OxU2NrtUJe/lgx+f6K0=
+
 killable@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"

@@ -2,6 +2,8 @@
 import bcrypt from 'bcryptjs';
 import { tryLogin } from 'ui/apollo/resolvers/auth';
 import { formatErrors } from 'ui/apollo/resolvers/auth/formatErrors';
+import { GET_ALL_USERS_STATE } from 'ui/apollo/resolvers/gql/user';
+import keygen from 'keygenerator';
 
 const SECRET = process.env.REACT_APP_SECRET;
 const SECRET_2 = process.env.REACT_APP_SECRET_2;
@@ -10,20 +12,25 @@ const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
 const salt = bcrypt.genSaltSync(SALT_ROUNDS);
 
 export default {
-  register: async (root, args, context) => {
-    let user = args;
-
-    console.log(user);
+  register: async (root, { email, password }, { cache }) => {
+    let user;
 
     try {
+      if (email) {
+        const { users } = cache.readQuery({
+          query: GET_ALL_USERS_STATE,
+        });
+
+        debugger;
+        return {
+          ok: false,
+          errors: [{ message: 'An email address has already been taken.', path: 'email' }],
+        };
+      }
+      user.id = keygen._();
+      user.email = email;
+      user.password = password;
       user.password = await bcrypt.hashSync(user.password, salt);
-
-      //TODO: add user to local storage
-
-      user = '';
-
-      // user = await new models.User(user).save();
-      user._id = user._id.toString();
 
       console.log('register successfully', user);
 

@@ -1,18 +1,31 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 import { withApollo } from 'react-apollo';
+import { withRouter } from 'react-router-dom';
 import { Form as FormAntd, Icon, Input, Button } from 'antd';
 import { Form, Field } from 'react-final-form';
-import { TextField } from 'react-final-form-antd';
-
+import { SIGN_UP_USER } from './gql';
 import { fieldNames, constraints } from './model';
 import validator from 'utils/validator';
 
 const validate = validator(constraints);
 
-const SignUpUser = () => {
+const SignUpUser = ({ history, client, ...others }) => {
   const onSubmit = async values => {
     console.log(values);
+
+    try {
+      const response = await client.mutate({
+        muatation: SIGN_UP_USER,
+        variables: {
+          email: '',
+          password: '',
+        },
+      });
+
+      console.log(response);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -21,15 +34,41 @@ const SignUpUser = () => {
       validate={validate}
       render={({ handleSubmit, pristine, invalid }) => (
         <FormAntd onSubmit={handleSubmit}>
-          <Field name={fieldNames.email} component={TextField} />
-          <Field name={fieldNames.password} component={TextField} type="password" />
+          <Field
+            name={fieldNames.email}
+            render={({ input, meta }) => (
+              <FormAntd.Item
+                validateStatus={!!meta.touched && !!meta.error && 'error'}
+                help={!!meta.touched && !!meta.error && meta.error}
+              >
+                <Input
+                  prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder={'Email'}
+                  {...input}
+                />
+              </FormAntd.Item>
+            )}
+          />
+
+          <Field
+            name={fieldNames.password}
+            render={({ input, meta }) => (
+              <FormAntd.Item
+                validateStatus={!!meta.touched && !!meta.error && 'error'}
+                help={!!meta.touched && !!meta.error && meta.error}
+              >
+                <Input
+                  prefix={<Icon type="form" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder={'Password'}
+                  type="password"
+                  {...input}
+                />
+              </FormAntd.Item>
+            )}
+          />
+
           <div className="float-right">
-            <Button
-              disabled={pristine || invalid}
-              type="primary"
-              htmlType="submit"
-              className="login-form-button"
-            >
+            <Button disabled={pristine || invalid} type="primary" htmlType="submit">
               Sign up
             </Button>
           </div>
