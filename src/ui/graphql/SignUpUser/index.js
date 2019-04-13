@@ -37,7 +37,7 @@ const SignUpUser = ({ history, client, ...others }) => {
           message.success('Sign up successfully!');
           history.push(routeTemplates.auth.login);
           setLoading(false);
-        }, 2000);
+        }, 500);
       }
     } catch (error) {
       message.error(error.message);

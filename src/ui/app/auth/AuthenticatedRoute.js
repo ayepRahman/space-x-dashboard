@@ -4,52 +4,63 @@
 
 import React, { useState, useEffect, useContext } from 'react';
 import { Route, Redirect, withRouter } from 'react-router-dom';
+import { AuthContext } from 'ui/contexts/Auth';
+import { Spin, message, Row, Col } from 'antd';
 
-import routeTemplates from 'ui/app/common/routeTemplates';
+import routeTemplates from 'ui/routes/templates';
 
 const AuthenticatedRoute = props => {
+  const { component: WrapComponent, ...others } = props;
   const [state, setState] = useState({
     isAuthenticated: false,
     pending: true,
   });
-
-  /**
-   * TODO: check for localStorage UserToken, if exist check the validity of the token
-   * if valid then user able to login
-   */
-  // const { user } = useContext(FirebaseContext);
-  const { component: WrapComponent, enqueueSnackbar, ...others } = props;
-  const hasUser = true;
-  const user = {};
+  const { token } = useContext(AuthContext);
 
   useEffect(() => {
-    if (hasUser) {
+    if (token) {
       setState({
         ...state,
+        isAuthenticated: true,
         pending: false,
-        isAuthenticated: hasUser,
+      });
+    } else {
+      setState({
+        ...state,
+        isAuthenticated: false,
+        pending: false,
       });
     }
-  });
+  }, [token]);
 
   return (
     <Route
       {...others}
       render={routeProps => {
-        if (state.pending) return <p>...loading</p>;
+        if (state.pending)
+          return (
+            <Row className="pt-5">
+              <Col className="text-center">
+                <Spin tip="Loading..." />
+              </Col>
+            </Row>
+          );
 
-        return state.isAuthenticated ? (
-          <WrapComponent user={user} {...routeProps} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: routeTemplates.home,
-            }}
-          />
-        );
+        if (state.isAuthenticated) {
+          return <WrapComponent {...routeProps} />;
+        } else {
+          message.warning('Please login to access!');
+          return (
+            <Redirect
+              to={{
+                pathname: routeTemplates.home,
+              }}
+            />
+          );
+        }
       }}
     />
   );
 };
 
-export default withRouter(withSnackbar(AuthenticatedRoute));
+export default withRouter(AuthenticatedRoute);

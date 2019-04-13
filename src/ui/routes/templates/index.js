@@ -5,6 +5,6 @@ export default {
     signup: '/signup',
   },
   dashboard: {
-    root: 'dashboard',
+    root: '/dashboard',
   },
 };

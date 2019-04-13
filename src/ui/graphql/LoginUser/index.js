@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
+import { AuthContext } from 'ui/contexts/Auth';
+
 import { Form as FormAntd, Icon, Input, Button, message } from 'antd';
 import { Form, Field } from 'react-final-form';
 import { LOGIN_USER } from './gql';
@@ -12,6 +14,7 @@ const validate = validator(constraints);
 
 const LoginUser = ({ history, client, ...others }) => {
   const [loading, setLoading] = useState(false);
+  const { setToken } = useContext(AuthContext);
 
   const onSubmit = async values => {
     const { email, password } = values;
@@ -28,21 +31,17 @@ const LoginUser = ({ history, client, ...others }) => {
 
       const { login } = data;
 
-      debugger;
-
       if (login && !login.ok && login.errors) {
         message.error(login.errors[0].message);
         setLoading(false);
       } else {
         // this create a feeling of actually calling an api! =)
         setTimeout(() => {
-          localStorage.setItem('token', login.token);
-          localStorage.setItem('refreshToken', login.refreshToken);
+          setToken(login.token);
           message.success('Login successfully!');
           history.push(routeTemplates.dashboard.root);
           setLoading(false);
-          debugger;
-        }, 2000);
+        }, 500);
       }
     } catch (error) {
       message.error(error.message);

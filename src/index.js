@@ -7,6 +7,7 @@ import { ApolloLink } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { withClientState } from 'apollo-link-state';
+import { AuthProvider } from 'ui/contexts/Auth';
 
 // APOLLO CLIENTSTATE
 import { defaults } from 'ui/apollo/defaults';
@@ -48,7 +49,9 @@ const client = new ApolloClient({
 ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </ApolloProvider>
   </BrowserRouter>,
   document.getElementById('root'),

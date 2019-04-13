@@ -1,23 +1,28 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Layout, Button } from 'antd';
+import { AuthContext } from 'ui/contexts/Auth';
+import { Layout, Button, message } from 'antd';
 import routeTemplates from 'ui/routes/templates';
 
 const { Header } = Layout;
 
 const AppLayout = ({ history, children, ...others }) => {
   const [hasUser, setHasUser] = useState(false);
-  const token = localStorage.getItem('token');
+  const { token } = useContext(AuthContext);
 
   useEffect(() => {
     if (token) {
       setHasUser(true);
+    } else {
+      setHasUser(false);
     }
   }, [token]);
 
   const handleLogOut = () => {
     localStorage.clear();
     setHasUser(false);
+    history.push(routeTemplates.home);
+    message.success('Logout successfully!');
   };
 
   return (
