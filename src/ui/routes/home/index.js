@@ -1,16 +1,18 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Layout, Button } from 'antd';
 import { Row, Col } from 'antd';
-
-import routeTemplates from 'ui/routes/templates';
-
-const { Header, Sider, Content, Footer } = Layout;
+import SpaceXAnimationLogo from 'ui/components/Animators/SpaceXAnimationLogo';
 
 const Home = ({ history }) => {
   return (
-    <div>
-      <h1>Home la</h1>
+    <div style={{ height: '100vh' }}>
+      <Row style={{ height: '50%' }} type="flex" justify="space-around" align="middle">
+        <Col>
+          <div>
+            <SpaceXAnimationLogo />
+          </div>
+        </Col>
+      </Row>
     </div>
   );
 };

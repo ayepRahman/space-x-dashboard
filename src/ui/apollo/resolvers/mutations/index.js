@@ -1,7 +1,7 @@
 // NOTE: best practice for resolver is to pass a gql tag with all the params
 import bcrypt from 'bcryptjs';
 import { tryLogin } from 'ui/apollo/resolvers/auth';
-import { formatErrors } from 'ui/apollo/resolvers/auth/formatErrors';
+// import { formatErrors } from 'ui/apollo/resolvers/auth/formatErrors';
 import { GET_ALL_USERS_STATE } from 'ui/apollo/resolvers/gql/user';
 import keygen from 'keygen';
 
