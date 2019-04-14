@@ -4,7 +4,7 @@
 
 Space X Explorer that show history of past rocket launches. Want to create a Client side only state management that create a user on the client cache including client side authentication.
 
-![](spaceX.gif)
+![](spaceX-HD.gif)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
