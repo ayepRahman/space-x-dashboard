@@ -18,6 +18,17 @@ Apollo Client for state management, and interaction with GraphQL space x api
 If you have not install `yarn` in you machine install yarn using `brew`
 or for other methods https://yarnpkg.com/lang/en/docs/install/#mac-stable
 
+### Note!
+
+Add a `.env.local` in the root of the directory and add the follwoing variables
+
+```
+REACT_APP_SPACE_X_API="https://api.spacex.land/graphql/"
+REACT_APP_SALT_ROUNDS="12"
+REACT_APP_SECRET="s3cr3t"
+REACT_APP_SECRET_2="s3cr3ttw0"
+```
+
 ### `brew install yarn`
 
 Run yarn to install the dependencies.
@@ -43,3 +54,7 @@ You will also see any lint errors in the console.
 5. Create a fake login page, use a cache/localstorage variable after logging in.
 6. Remember to provide a logout button after logging in.
 7. Using SpaceX’s GraphQL API, render a list of their rockets in a table.
+
+```
+
+```
