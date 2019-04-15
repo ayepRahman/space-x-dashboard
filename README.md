@@ -33,6 +33,8 @@ REACT_APP_SECRET_2="s3cr3ttw0"
 
 Run yarn to install the dependencies.
 
+### git clone
+
 ### `yarn`
 
 To start locally run:
